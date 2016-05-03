@@ -1,0 +1,37 @@
+# HookPackage scope begin
+- !!gaofu.xposedhook.domain.HookPackage
+  name: com.google.vending
+  hookClasses:
+##  HookClass scope begin
+  - name: com.google.util
+    tag: store
+    constructor: true
+    hookMethods:
+###   HookMethod scope begin
+    - name: purchase
+      params: [java.lang.String, int]
+      resultFields: {age: int, name: java.lang.String}
+###   HookMethod scope end
+##  HookClass scope end
+# HookPackage scope end
+
+# HookPackage scope begin
+- !!gaofu.xposedhook.domain.HookPackage
+  name: com.google.vending
+  hookClasses:
+##  HookClass scope begin
+  - name: com.google.util
+    tag: store
+    constructor: true
+    hookMethods:
+###   HookMethod scope begin
+    - name: purchase
+      params:
+      - java.lang.String
+      - int
+      resultFields:
+        age: int
+        name: java.lang.String
+###   HookMethod scope end
+##  HookClass scope end
+# HookPackage scope end
