@@ -24,9 +24,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.github.bmoliveira:snake-yaml:v1.18-android'
     compile 'commons-io:commons-io:2.5'
+    compile 'com.google.code.gson:gson:2.6.2'
     provided 'de.robv.android.xposed:api:81'
     provided 'de.robv.android.xposed:api:81:sources'
 
     testCompile 'junit:junit:4.12'
-    testCompile 'com.google.code.gson:gson:2.6.2'
 }

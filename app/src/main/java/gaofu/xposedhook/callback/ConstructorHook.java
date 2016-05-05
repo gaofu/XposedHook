@@ -34,14 +34,16 @@ public class ConstructorHook extends XC_MethodHook {
         if (0 == param.args.length) {
             Log.d(tag, format("Call %s's no argument constructor", className));
         } else {
-            Log.d(tag, format("Call %s's constructor with %d parameters", className, param.args.length));
+            Log.d(tag, format("Call %s's constructor with %d parameters",
+                    className, param.args.length));
+
             for (int i = 0; i < param.args.length; i++) {
                 Object arg = param.args[i];
                 if (arg == null) {
                     Log.d(tag, format("class %s constructor param %d is null", className, i));
                 } else {
-                    Log.d(tag, format("class %s constructor param %d -> type=%s, value=%s",
-                            className, i, arg.getClass().getName(), String.valueOf(arg)));
+                    Log.d(tag, format("class %s constructor param %d -> (Type=%s, Value=%s)",
+                            className, i, arg.getClass().getName(), Util.toString(arg)));
                 }
             }
         }

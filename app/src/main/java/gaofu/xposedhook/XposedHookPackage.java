@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -96,9 +95,9 @@ public class XposedHookPackage implements IXposedHookLoadPackage{
                             for (HookMethod hookMethod : hookMethods) {
                                 String methodName = hookMethod.getName();
                                 List<String> params = hookMethod.getParams();
-                                Map<String, String> resultFields = hookMethod.getResultFields();
+                                boolean printStackTrace = hookMethod.isPrintStackTrace();
 
-                                MethodHook methodHook = new MethodHook(resultFields, tag);
+                                MethodHook methodHook = new MethodHook(tag, printStackTrace);
                                 Object[] typesAndCallback;
                                 if (Util.isEmpty(params)) {
                                     typesAndCallback = new Object[]{methodHook};

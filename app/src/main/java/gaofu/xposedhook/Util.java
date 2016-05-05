@@ -3,6 +3,8 @@ package gaofu.xposedhook;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.util.Collection;
 
 /**
@@ -10,6 +12,7 @@ import java.util.Collection;
  * Created on 2016/5/2.
  */
 public class Util {
+    private static final Gson gson = new Gson();
 
     public static String getLogTag(String tag) {
         return TextUtils.isEmpty(tag) ? "Xposed" : tag;
@@ -32,6 +35,21 @@ public class Util {
          */
         for (int i = 3; i < elements.length; i++) {
             Log.i(tag, elements[i].toString());
+        }
+    }
+
+    public static String toString(Object o) {
+        if (o == null) {
+            return null;
+        }
+
+        try {
+            // 如果o的类实现了public toString()方法，调用toString()
+            o.getClass().getDeclaredMethod("toString");
+            return o.toString();
+        } catch (NoSuchMethodException e) {
+            // 如果o的类没有实现public toString()方法，转换为json字符串
+            return gson.toJson(o);
         }
     }
 }

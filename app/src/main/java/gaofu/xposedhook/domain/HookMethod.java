@@ -1,7 +1,6 @@
 package gaofu.xposedhook.domain;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by gaofu.
@@ -10,7 +9,7 @@ import java.util.Map;
 public class HookMethod {
     private String name;
     private List<String> params;
-    private Map<String, String> resultFields;
+    private boolean printStackTrace;
 
     public String getName() {
         return name;
@@ -28,20 +27,20 @@ public class HookMethod {
         this.params = params;
     }
 
-    public Map<String, String> getResultFields() {
-        return resultFields;
+    public boolean isPrintStackTrace() {
+        return printStackTrace;
     }
 
-    public void setResultFields(Map<String, String> resultFields) {
-        this.resultFields = resultFields;
+    public void setPrintStackTrace(boolean printStackTrace) {
+        this.printStackTrace = printStackTrace;
     }
 
     @Override
     public String toString() {
         return "HookMethod{" +
                 "name='" + name + '\'' +
+                ", printStackTrace=" + printStackTrace +
                 ", params=" + params +
-                ", resultFields=" + resultFields +
                 '}';
     }
 }

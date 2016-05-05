@@ -3,11 +3,8 @@ package gaofu.xposedhook.callback;
 import android.util.Log;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
 import gaofu.xposedhook.Util;
 
 import static java.lang.String.format;
@@ -18,15 +15,15 @@ import static java.lang.String.format;
  */
 public class MethodHook extends XC_MethodHook {
     private String tag;
-    private Map<String, String> resultFields;
+    private boolean printStackTrace;
     private String method;
 
     public MethodHook() {
     }
 
-    public MethodHook(Map<String, String> resultFields, String tag) {
-        this.resultFields = resultFields;
+    public MethodHook(String tag, boolean printStackTrace) {
         this.tag = tag;
+        this.printStackTrace = printStackTrace;
     }
 
     public MethodHook(int priority) {
@@ -53,7 +50,9 @@ public class MethodHook extends XC_MethodHook {
             }
         }
 
-        Util.printStackTrace(tag);
+        if (printStackTrace) {
+            Util.printStackTrace(tag);
+        }
     }
 
     @Override
@@ -64,49 +63,44 @@ public class MethodHook extends XC_MethodHook {
             if (result == null) {
                 Log.d(tag, format("Method %s returns null", method));
             } else {
-                boolean isArray = result.getClass().isArray();
-                Log.d(tag, format("Method %s returns %s(type=%s)", method,
-                        (isArray ? Arrays.asList(result) : result), result.getClass().getName()));
-                if (resultFields != null && resultFields.size() > 0) {
-                    Log.d(tag, format("Method %s's result is %s",
-                            method, getResultString(result)));
-                }
-            }
+                Log.d(tag, format("Method %s returns -> (Type=%s, Value=%s)",
+                        method, result.getClass().getName(), Util.toString(result)));
+           }
         }
         Log.d(tag, format("afterHookedMethod %s", method));
     }
 
-    private String getResultString(Object result) {
-        StringBuilder sb = new StringBuilder(result.getClass().getName()).append('{');
-        for (String name : resultFields.keySet()) {
-            String type = resultFields.get(name);
-            sb.append(name).append('(').append(type).append(")=");
-            try {
-                Object fieldValue = getField(result, name, type);
-                sb.append(fieldValue);
-            } catch (Throwable throwable) {
-                sb.append("null");
-            }
-            sb.append(',');
-        }
-        int pos = sb.length() - 1;
-        sb.replace(pos, pos, "}");
+//    private String getResultString(Object result) {
+//        StringBuilder sb = new StringBuilder(result.getClass().getName()).append('{');
+//        for (String name : resultFields.keySet()) {
+//            String type = resultFields.get(name);
+//            sb.append(name).append('(').append(type).append(")=");
+//            try {
+//                Object fieldValue = getField(result, name, type);
+//                sb.append(fieldValue);
+//            } catch (Throwable throwable) {
+//                sb.append("null");
+//            }
+//            sb.append(',');
+//        }
+//        int pos = sb.length() - 1;
+//        sb.replace(pos, pos, "}");
+//
+//        return sb.toString();
+//    }
 
-        return sb.toString();
-    }
-
-    private Object getField(Object object, String name, String type){
-        switch(type){
-            case "int":     return XposedHelpers.getIntField(object, name);
-            case "byte":    return XposedHelpers.getByteField(object, name);
-            case "char":    return XposedHelpers.getCharField(object, name);
-            case "long":    return XposedHelpers.getLongField(object, name);
-            case "short":   return XposedHelpers.getShortField(object, name);
-            case "float":   return XposedHelpers.getFloatField(object, name);
-            case "double":  return XposedHelpers.getDoubleField(object, name);
-            case "boolean": return XposedHelpers.getBooleanField(object, name);
-            default:        return XposedHelpers.getObjectField(object, name);
-        }
-    }
+//    private Object getField(Object object, String name, String type){
+//        switch(type){
+//            case "int":     return XposedHelpers.getIntField(object, name);
+//            case "byte":    return XposedHelpers.getByteField(object, name);
+//            case "char":    return XposedHelpers.getCharField(object, name);
+//            case "long":    return XposedHelpers.getLongField(object, name);
+//            case "short":   return XposedHelpers.getShortField(object, name);
+//            case "float":   return XposedHelpers.getFloatField(object, name);
+//            case "double":  return XposedHelpers.getDoubleField(object, name);
+//            case "boolean": return XposedHelpers.getBooleanField(object, name);
+//            default:        return XposedHelpers.getObjectField(object, name);
+//        }
+//    }
 
 }
