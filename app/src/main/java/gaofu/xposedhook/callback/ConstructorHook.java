@@ -46,7 +46,7 @@ public class ConstructorHook extends XC_MethodHook {
             }
         }
 
-        Util.printStack(tag);
+        Util.printStackTrace(tag);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package gaofu.xposedhook;
 
+import android.os.Environment;
 import android.util.Log;
 
 import org.apache.commons.io.FileUtils;
@@ -38,8 +39,8 @@ public class XposedHookPackage implements IXposedHookLoadPackage{
      * YAML format configuration file.
      * Contains package names, class names, method names, parameter types to be hooked.
      */
-    private static final File hookConfig = new File("/sdcard", "hooks.yaml");
-//    private static final File hookConfig = new File(Environment.getExternalStorageDirectory(), "hooks.yaml");
+//    private static final File hookConfig = new File("/sdcard", "hooks.yaml");
+    private static final File hookConfig = new File(Environment.getExternalStorageDirectory(), "hooks.yaml");
 
     /**
      * Hook information loaded from {@link #hookConfig} file.
@@ -49,10 +50,9 @@ public class XposedHookPackage implements IXposedHookLoadPackage{
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         /** Return if the configuration file does not exist. */
-//        log("Configuration file is " + hookConfig.getAbsolutePath());   // Just for debug
         if (!hookConfig.isFile()) {
-            Log.v(VERBOSE_TAG, format("Xposed hook configuration " +
-                    "file '%s' does not exist!", hookConfig));
+            Log.v(VERBOSE_TAG, format(
+                    "Xposed hook configuration file '%s' does not exist!", hookConfig));
             return;
         }
 
@@ -62,7 +62,8 @@ public class XposedHookPackage implements IXposedHookLoadPackage{
          */
         if (hookPackages.isEmpty() || isUpdated(hookConfig)) {
             hookPackages.clear();
-            Log.v(VERBOSE_TAG, "Load configuration file in app " + lpparam.processName);
+            Log.v(VERBOSE_TAG, format("Load configuration file(%s) in app '%s'",
+                    hookConfig, lpparam.processName));
             loadPackages();
             if (hookPackages.isEmpty()) {
                 return;
@@ -70,7 +71,7 @@ public class XposedHookPackage implements IXposedHookLoadPackage{
         }
 
         Log.v(VERBOSE_TAG, format("hookPackages in app(%s) is %s",
-                lpparam.processName, hookPackages.toString())); // Just for debug
+                lpparam.processName, hookPackages.toString()));
 
         for (HookPackage hookPackage : hookPackages) {
             Log.v(VERBOSE_TAG, "hookPackage:" + hookPackage.toString());
@@ -96,9 +97,8 @@ public class XposedHookPackage implements IXposedHookLoadPackage{
                                 String methodName = hookMethod.getName();
                                 List<String> params = hookMethod.getParams();
                                 Map<String, String> resultFields = hookMethod.getResultFields();
-                                boolean pst = hookMethod.isPrintStackTrace();
 
-                                MethodHook methodHook = new MethodHook(resultFields, tag, pst);
+                                MethodHook methodHook = new MethodHook(resultFields, tag);
                                 Object[] typesAndCallback;
                                 if (Util.isEmpty(params)) {
                                     typesAndCallback = new Object[]{methodHook};

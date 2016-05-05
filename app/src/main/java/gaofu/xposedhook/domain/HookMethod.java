@@ -9,7 +9,6 @@ import java.util.Map;
  */
 public class HookMethod {
     private String name;
-    private boolean printStackTrace;
     private List<String> params;
     private Map<String, String> resultFields;
 
@@ -37,19 +36,10 @@ public class HookMethod {
         this.resultFields = resultFields;
     }
 
-    public boolean isPrintStackTrace() {
-        return printStackTrace;
-    }
-
-    public void setPrintStackTrace(boolean printStackTrace) {
-        this.printStackTrace = printStackTrace;
-    }
-
     @Override
     public String toString() {
         return "HookMethod{" +
                 "name='" + name + '\'' +
-                ", printStackTrace=" + printStackTrace +
                 ", params=" + params +
                 ", resultFields=" + resultFields +
                 '}';

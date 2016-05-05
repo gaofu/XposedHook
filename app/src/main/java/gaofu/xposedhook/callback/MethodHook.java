@@ -3,6 +3,7 @@ package gaofu.xposedhook.callback;
 import android.util.Log;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -17,17 +18,15 @@ import static java.lang.String.format;
  */
 public class MethodHook extends XC_MethodHook {
     private String tag;
-    private boolean printStackTrace;
     private Map<String, String> resultFields;
     private String method;
 
     public MethodHook() {
     }
 
-    public MethodHook(Map<String, String> resultFields, String tag, boolean printStackTrace) {
+    public MethodHook(Map<String, String> resultFields, String tag) {
         this.resultFields = resultFields;
         this.tag = tag;
-        this.printStackTrace = printStackTrace;
     }
 
     public MethodHook(int priority) {
@@ -36,7 +35,7 @@ public class MethodHook extends XC_MethodHook {
 
     @Override
     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-        method = ((Method)param.method).toGenericString();
+        method = param.method.toString();
         Log.d(tag, format("beforeHookedMethod %s", method));
 
         if (0 == param.args.length) {
@@ -54,9 +53,7 @@ public class MethodHook extends XC_MethodHook {
             }
         }
 
-        if (printStackTrace) {
-            Util.printStack(tag);
-        }
+        Util.printStackTrace(tag);
     }
 
     @Override
@@ -67,8 +64,9 @@ public class MethodHook extends XC_MethodHook {
             if (result == null) {
                 Log.d(tag, format("Method %s returns null", method));
             } else {
+                boolean isArray = result.getClass().isArray();
                 Log.d(tag, format("Method %s returns %s(type=%s)", method,
-                        result, result.getClass().getName()));
+                        (isArray ? Arrays.asList(result) : result), result.getClass().getName()));
                 if (resultFields != null && resultFields.size() > 0) {
                     Log.d(tag, format("Method %s's result is %s",
                             method, getResultString(result)));

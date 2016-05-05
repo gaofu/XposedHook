@@ -3,7 +3,6 @@ package gaofu.xposedhook;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 
 /**
@@ -24,14 +23,15 @@ public class Util {
         return collection == null || collection.isEmpty();
     }
 
-    public static void printStack(String tag)  {
-        try {
-            Class<?> threadClazz = Class.forName("android.os.Debug");
-            Method method = threadClazz.getMethod("getCallers", int.class, int.class);
-            String out = (String) method.invoke(null, 1, 20);
-            Log.d(tag, out);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void printStackTrace(String tag)  {
+        StackTraceElement[] elements = new RuntimeException().fillInStackTrace().getStackTrace();
+        /*
+         * elements[0] gaofu.xposedhook.Util.printStackTrace(Util.java)
+         * elements[1] gaofu.xposedhook.callback.MethodHook.beforeHookedMethod(MethodHook.java)
+         * elements[2] de.robv.android.xposed.XposedBridge.handleHookedMethod(XposedBridge.java)
+         */
+        for (int i = 3; i < elements.length; i++) {
+            Log.i(tag, elements[i].toString());
         }
     }
 }
