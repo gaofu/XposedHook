@@ -38,7 +38,6 @@ public class XposedHookPackage implements IXposedHookLoadPackage{
      * YAML format configuration file.
      * Contains package names, class names, method names, parameter types to be hooked.
      */
-//    private static final File hookConfig = new File("/sdcard", "hooks.yaml");
     private static final File hookConfig = new File(Environment.getExternalStorageDirectory(), "hooks.yaml");
 
     /**
@@ -55,18 +54,9 @@ public class XposedHookPackage implements IXposedHookLoadPackage{
             return;
         }
 
-        /**
-         * Load configurations if hookPackages is empty
-         * or the file is modified during the past 30 seconds.
-         */
-        if (hookPackages.isEmpty() || isUpdated(hookConfig)) {
-            hookPackages.clear();
-            Log.v(VERBOSE_TAG, format("Load configuration file(%s) in app '%s'",
-                    hookConfig, lpparam.processName));
-            loadPackages();
-            if (hookPackages.isEmpty()) {
-                return;
-            }
+        loadPackages();
+        if (hookPackages.isEmpty()) {
+            return;
         }
 
         Log.v(VERBOSE_TAG, format("hookPackages in app(%s) is %s",
